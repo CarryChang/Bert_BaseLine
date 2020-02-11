@@ -1,8 +1,10 @@
 # encoding = utf - 8
 import codecs
 import numpy as np
+import os
 from keras.preprocessing import sequence
 from keras_bert import Tokenizer, load_trained_model_from_checkpoint
+from keras.callbacks import ModelCheckpoint, TensorBoard
 from model import build_model
 class CTokenizer(Tokenizer):
     def _tokenize(self, text):
@@ -47,7 +49,10 @@ def get_encode(pos, neg, token_dict):
 def model_train(bertvec,y):
     model = build_model(maxlen)
     model.summary()
-    model.fit(bertvec, y, batch_size=32, epochs=10, validation_split=0.2, shuffle=True)
+    checkpoit = ModelCheckpoint(filepath=os.path.join('/model/check_point', 'model-{epoch:02d}.h5'))
+    tensorboard = TensorBoard(log_dir='/tensorboard', histogram_freq=0, write_graph=True, write_images=True)
+    model.fit(bertvec, y, batch_size=32, epochs=10, validation_split=0.2, shuffle=True,
+              callbacks=[checkpoit, tensorboard])
     model.save('model/keras_bert.h5')
 
 if __name__ =='__main__':
