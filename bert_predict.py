@@ -3,7 +3,7 @@ import codecs
 from keras.preprocessing import sequence
 from keras_bert import Tokenizer, load_trained_model_from_checkpoint
 from keras.models import load_model
-class OurTokenizer(Tokenizer):
+class CTokenizer(Tokenizer):
     def _tokenize(self, text):
         tokenize_dic = []
         for character in text:
@@ -22,7 +22,7 @@ def get_token_dict(dict_path):
             token_dict[token] = len(token_dict)
     return token_dict
 def get_encode(content, token_dict):
-    tokenizer = OurTokenizer(token_dict)
+    tokenizer = CTokenizer(token_dict)
     onehot_encoding = []
     postion_encoding = []
     onehot, postion = tokenizer.encode(first=content)
