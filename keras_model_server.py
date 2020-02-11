@@ -22,7 +22,7 @@ def global_():
 			token = line.strip()
 			token_dict[token] = len(token_dict)
 	graph = tf.get_default_graph()
-class OurTokenizer(Tokenizer):
+class CTokenizer(Tokenizer):
 	def _tokenize(self, text):
 		tokenize_dic = []
 		for character in text:
@@ -34,7 +34,7 @@ class OurTokenizer(Tokenizer):
 				tokenize_dic.append('[UNK]')
 		return tokenize_dic
 def get_encode(content, token_dict):
-	tokenizer = OurTokenizer(token_dict)
+	tokenizer = CTokenizer(token_dict)
 	onehot_encoding = []
 	postion_encoding = []
 	onehot, postion = tokenizer.encode(first=content)
