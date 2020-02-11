@@ -32,7 +32,6 @@ def load_data():
         for line in reader:
             neg.append(line.strip())
     return pos[:train_number], neg[:train_number]
-# 得到编码
 def get_encode(pos, neg, token_dict):
     data_encoder = pos + neg
     tokenizer = CTokenizer(token_dict)
@@ -42,7 +41,6 @@ def get_encode(pos, neg, token_dict):
         one_hot, position = tokenizer.encode(first=line)
         one_hot_encoder.append(one_hot)
         position_encoder.append(position)
-    # x1 one-hot,x2 is position encoder
     one_hot_encoder = sequence.pad_sequences(one_hot_encoder, maxlen=maxlen, padding='post', truncating='post')
     position_encoder = sequence.pad_sequences(position_encoder, maxlen=maxlen, padding='post', truncating='post')
     return [one_hot_encoder, position_encoder]
