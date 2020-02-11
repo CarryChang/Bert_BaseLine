@@ -1,0 +1,4 @@
+keras-bert
+flask
+tensorflow==1.12
+
