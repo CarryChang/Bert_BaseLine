@@ -47,7 +47,7 @@ if __name__ =='__main__':
     dict_path = '{}/vocab.txt'.format(base_path)
     maxlen = 100
     # load data
-    content = '房间的环境非常垃圾'
+    content = '房间的环境可以啊'
     token_dict = get_token_dict(dict_path)
     # get_encode()
     encoder = get_encode(content, token_dict)

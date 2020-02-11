@@ -31,28 +31,23 @@ def load_data():
     with codecs.open('data/neg.txt', 'r', 'utf-8') as reader:
         for line in reader:
             neg.append(line.strip())
-    return pos[:3000], neg[:3000]
+    return pos[:train_number], neg[:train_number]
 # 得到编码
-def get_encode(pos, neg, token_dict):
-    all_data = pos + neg
-    tokenizer = OurTokenizer(token_dict)
-    X1 = []
-    X2 = []
-    for line in all_data:
-        # character level train
-        x1, x2 = tokenizer.encode(first=line)
-        X1.append(x1)
-        X2.append(x2)
-    # x1 one-hot,x2 is position encoder
-    X1 = sequence.pad_sequences(X1, maxlen=maxlen, padding='post', truncating='post')
-    X2 = sequence.pad_sequences(X2, maxlen=maxlen, padding='post', truncating='post')
-    return [X1, X2]
+def get_encode(content, token_dict):
+    tokenizer = CTokenizer(token_dict)
+    onehot_encoding = []
+    postion_encoding = []
+    onehot, postion = tokenizer.encode(first=content)
+    onehot_encoding.append(onehot)
+    postion_encoding.append(postion)
+    onehot_encoding = sequence.pad_sequences(onehot_encoding, maxlen=maxlen, padding='post', truncating='post')
+    postion_encoding = sequence.pad_sequences(postion_encoding, maxlen=maxlen, padding='post', truncating='post')
+    return [onehot_encoding, postion_encoding]
 def model_train(bertvec,y):
     model = build_model(maxlen)
     model.summary()
     model.fit(bertvec, y, batch_size=32, epochs=10, validation_split=0.2, shuffle=True)
     model.save('model/keras_bert.h5')
-
 if __name__ =='__main__':
     '''
     Bert+ BiLSTM to make text_classify
@@ -62,6 +57,7 @@ if __name__ =='__main__':
     checkpoint_path = '{}/bert_model.ckpt'.format(base_path)
     dict_path = '{}/vocab.txt'.format(base_path)
     maxlen = 100
+    train_number = 10000
     pos, neg = load_data()
     token_dict = get_token_dict(dict_path)
     # get_encode()
@@ -69,7 +65,7 @@ if __name__ =='__main__':
     bert_model = load_trained_model_from_checkpoint(config_path, checkpoint_path, seq_len=None)
     bert_vec = bert_model.predict(encoder)
     # label make
-    y = np.concatenate((np.ones(3000, dtype=int), np.zeros(3000, dtype=int)))
+    y = np.concatenate((np.ones(train_number, dtype=int), np.zeros(train_number, dtype=int)))
     print(len(y))
     print(len(bert_vec))
     # model train
