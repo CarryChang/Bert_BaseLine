@@ -33,21 +33,25 @@ def load_data():
             neg.append(line.strip())
     return pos[:train_number], neg[:train_number]
 # 得到编码
-def get_encode(content, token_dict):
+def get_encode(pos, neg, token_dict):
+    data_encoder = pos + neg
     tokenizer = CTokenizer(token_dict)
-    onehot_encoding = []
-    postion_encoding = []
-    onehot, postion = tokenizer.encode(first=content)
-    onehot_encoding.append(onehot)
-    postion_encoding.append(postion)
-    onehot_encoding = sequence.pad_sequences(onehot_encoding, maxlen=maxlen, padding='post', truncating='post')
-    postion_encoding = sequence.pad_sequences(postion_encoding, maxlen=maxlen, padding='post', truncating='post')
-    return [onehot_encoding, postion_encoding]
+    one_hot_encoder = []
+    position_encoder = []
+    for line in data_encoder:
+        one_hot, position = tokenizer.encode(first=line)
+        one_hot_encoder.append(one_hot)
+        position_encoder.append(position)
+    # x1 one-hot,x2 is position encoder
+    one_hot_encoder = sequence.pad_sequences(one_hot_encoder, maxlen=maxlen, padding='post', truncating='post')
+    position_encoder = sequence.pad_sequences(position_encoder, maxlen=maxlen, padding='post', truncating='post')
+    return [one_hot_encoder, position_encoder]
 def model_train(bertvec,y):
     model = build_model(maxlen)
     model.summary()
     model.fit(bertvec, y, batch_size=32, epochs=10, validation_split=0.2, shuffle=True)
     model.save('model/keras_bert.h5')
+
 if __name__ =='__main__':
     '''
     Bert+ BiLSTM to make text_classify
