@@ -25,10 +25,10 @@ def get_token_dict(dict_path):
 def load_data():
     pos = []
     neg = []
-    with codecs.open('data/pos.txt', 'r', 'utf-8') as reader:
+    with codecs.open('data/pos_all.txt', 'r', 'utf-8') as reader:
         for line in reader:
             pos.append(line.strip())
-    with codecs.open('data/neg.txt', 'r', 'utf-8') as reader:
+    with codecs.open('data/neg_all.txt', 'r', 'utf-8') as reader:
         for line in reader:
             neg.append(line.strip())
     return pos[:train_number], neg[:train_number]
