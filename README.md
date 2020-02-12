@@ -23,7 +23,15 @@ time used:0.08649280000000001
 
 ```
 
+### tensorboard 加载 ;>tensorboard --logdir=tensorboard
+> 1. 地址： [click](http://carrychang:6006/ )
+
 ## tips:
 > 1. 中文使用词的方式训练比较合适
 > 2. 在遇到含有数字的时候，将数字统一进行变换为null即可
 > 3. 在遇到英文处理的时候，可以使用整体的覆盖
+> 4. 在工业界使用模型的用法就是将本次的训练的结果只保留权重，因为架构数据都是固定不变的，将数据固定化为hset，下次训练直接覆盖权重数据即可。
+### 模型保存的建议：
+> 1. HDF5格式文件保存的是 ： Model weights
+> 2. H5 格式文件保存的是： Model stucture 和 Model weights
+> 3. JSON 和 YAML 格式保存的是： Model stucture

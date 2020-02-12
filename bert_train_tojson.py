@@ -6,6 +6,7 @@ from keras.preprocessing import sequence
 from keras_bert import Tokenizer, load_trained_model_from_checkpoint
 from keras.callbacks import ModelCheckpoint, TensorBoard, EarlyStopping
 from model import build_model
+from keras.models import model_from_json
 class CTokenizer(Tokenizer):
     def _tokenize(self, text):
         tokenize_dic = []
@@ -50,18 +51,16 @@ def model_train(bertvec,y):
     model = build_model(maxlen)
     model.summary()
     # checkpoit = ModelCheckpoint(filepath=os.path.join('model/check_point/', 'model-{epoch:02d}.h5'))
-    best_model_path = 'model/keras_bert.h5'
+    best_model_path = 'model/weight/keras_bert.hdf5'
     earlyStopping = EarlyStopping(monitor='val_loss', patience=10, verbose=1, mode='auto')
-    saveBestModel = ModelCheckpoint(best_model_path, monitor='val_loss', verbose=1, save_best_only=True, mode='auto')
+    saveBestModel = ModelCheckpoint(best_model_path, save_weights_only=True, monitor='val_loss', verbose=1, save_best_only=True, mode='auto')
     tensorboard = TensorBoard(log_dir='tensorboard', histogram_freq=0, write_graph=True, write_grads=False, write_images=True)
-    model.fit(bertvec, y, batch_size=64, epochs=50, validation_split=0.2, shuffle=True,
+    model.fit(bertvec, y, batch_size=64, epochs=5, validation_split=0.2, shuffle=True,
               callbacks=[tensorboard, earlyStopping, saveBestModel])
 if __name__ =='__main__':
     '''
     Bert+ BiLSTM to make text_classify
     '''
-    # 指定gpu
-    os.environ["CUDA_VISIBLE_DEVICES"] = "3"
     base_path = 'D:/bert_textcls/chinese_L-12_H-768_A-12/chinese_L-12_H-768_A-12'
     config_path = '{}/bert_config.json'.format(base_path)
     checkpoint_path = '{}/bert_model.ckpt'.format(base_path)
