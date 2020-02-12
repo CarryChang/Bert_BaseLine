@@ -2,7 +2,7 @@
 import codecs
 from keras.preprocessing import sequence
 from keras_bert import Tokenizer, load_trained_model_from_checkpoint
-from keras.models import load_model
+from model import build_model
 class CTokenizer(Tokenizer):
     def _tokenize(self, text):
         tokenize_dic = []
@@ -33,9 +33,9 @@ def get_encode(content, token_dict):
     return [onehot_encoding, postion_encoding]
 
 def predict(bertvec):
-    model = load_model('model/keras_bert.h5')
-    # model = model.load_weights('model/keras_bert.h5')
-    # model.summary()
+    # load weight
+    model = build_model(maxlen)
+    model.load_weights('model/keras_bert_weight.h5')
     return model.predict(bertvec)
 
 if __name__ =='__main__':

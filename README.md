@@ -25,7 +25,7 @@ time used:0.08649280000000001
 
 ### tensorboard 加载 ;>tensorboard --logdir=tensorboard
 > 1. 地址： [click](http://carrychang:6006/ )
-
+> 2. 中文BERT地址 ： [click](https://storage.googleapis.com/bert_models/2018_11_03/chinese_L-12_H-768_A-12.zip)
 ## tips:
 > 1. 中文使用词的方式训练比较合适
 > 2. 在遇到含有数字的时候，将数字统一进行变换为null即可

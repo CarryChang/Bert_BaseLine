@@ -12,10 +12,12 @@ def load_whole_moel():
     model = load_model('model/keras_bert.h5')
     print(model.summary())
 def load_weigt():
-    weight_path = 'model/weight/keras_bert.json'
-    # 从json文件中加载模型,json只是保存权重参数
-    with open(weight_path, 'r', encoding='utf-8') as file:
-        model_json = file.read()
-    print(model_json)
+    from model import build_model
+    model = build_model(maxlen=100)
+    # 按照层数进行
+    model.load_weights('model/keras_bert_weight.h5')
+    print(model.summary())
 if __name__ == '__main__':
+    # load_whole_moel()
+    # 只加载weight
     load_weigt()

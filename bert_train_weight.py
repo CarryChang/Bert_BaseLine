@@ -6,6 +6,7 @@ from keras.preprocessing import sequence
 from keras_bert import Tokenizer, load_trained_model_from_checkpoint
 from keras.callbacks import ModelCheckpoint, TensorBoard, EarlyStopping, ReduceLROnPlateau
 from model import build_model
+from keras.models import model_from_json
 class CTokenizer(Tokenizer):
     def _tokenize(self, text):
         tokenize_dic = []
@@ -49,26 +50,19 @@ def get_encode(pos, neg, token_dict):
 def model_train(bertvec,y):
     model = build_model(maxlen)
     model.summary()
-    best_model_path = 'model/keras_bert.h5'
+    # only save weight
+    best_model_path = 'model/keras_bert_weight.h5'
+    # 自动更换learning rate
     adlearningRate = ReduceLROnPlateau(monitor='val_loss', factor=0.1, patience=10, verbose=0, mode='min', epsilon=0.0001, cooldown=0, min_lr=0)
     earlyStopping = EarlyStopping(monitor='val_acc', patience=10, verbose=1, mode='max')
     saveBestModel = ModelCheckpoint(best_model_path, save_weights_only=True, monitor='val_acc', verbose=1, save_best_only=True, mode='max')
     tensorboard = TensorBoard(log_dir='tensorboard', histogram_freq=0, write_graph=True, write_grads=False, write_images=True)
     model.fit(bertvec, y, batch_size=64, epochs=1, validation_split=0.2, shuffle=True,
               callbacks=[tensorboard, earlyStopping, saveBestModel, adlearningRate])
-    # weight to json
-    model_json = model.to_json()
-    with open("model/weight/model.json", "w") as json_file:
-        json_file.write(model_json)
-    # serialize weights to HDF5
-    model.save_weights("model/weight/model.h5")
-    print("Saved model to disk")
 if __name__ =='__main__':
     '''
     Bert+ BiLSTM to make text_classify
     '''
-    # 多gpu下指定gpu
-    # os.environ["CUDA_VISIBLE_DEVICES"] = "3"
     base_path = 'D:/bert_textcls/chinese_L-12_H-768_A-12/chinese_L-12_H-768_A-12'
     config_path = '{}/bert_config.json'.format(base_path)
     checkpoint_path = '{}/bert_model.ckpt'.format(base_path)

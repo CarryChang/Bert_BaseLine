@@ -34,7 +34,6 @@ def get_encode(content, token_dict):
 
 def predict(bertvec):
     model = load_model('model/keras_bert.h5')
-    # model = model.load_weights('model/keras_bert.h5')
     # model.summary()
     return model.predict(bertvec)
 

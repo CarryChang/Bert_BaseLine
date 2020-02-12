@@ -55,7 +55,8 @@ def predict():
 		result = {}
 		bert_vec = bert_model.predict(encoder)
 		result["content"] = content
-		result["sa"] = '%f.4' % model.predict(bert_vec)[0][0]
+		result["sa"] = '%.4f' % model.predict(bert_vec)[0][0]
 	return jsonify(result)
 if __name__ == "__main__":
+	# add hot fresh
 	app.run()
